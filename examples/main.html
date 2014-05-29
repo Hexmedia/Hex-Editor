@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>QUnit Main tests</title>
+    <link rel="stylesheet" href="../node_modules/qunitjs/qunit/qunit.css">
+    <script type="text/javascript" src="../node_modules/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="../node_modules/rangy-browser/lib/rangy-core.js"></script>
+    <script type="text/javascript" src="../node_modules/rangy-browser/lib/rangy-cssclassapplier.js"></script>
+    <script type="text/javascript" src="../node_modules/rangy-browser/lib/rangy-selectionsaverestore.js"></script>
+    <script type="text/javascript" src="../node_modules/rangy-browser/lib/rangy-serializer.js"></script>
+    <script type="text/javascript" src="../dist/jquery.hex-editor.js"></script>
+    <script type="text/javascript" src="../node_modules/twig/twig.js"></script>
+    <link rel="stylesheet" href="../dist/hex-editor.css"/>
+</head>
+<body>
+<div class="editor">
+    Some example tekst
+</div>
+<script type="text/javascript">
+    jQuery( document ).ready( function () {
+        jQuery( '.editor' ).hexEditor();
+    } );
+</script>
+</body>
+</html>
