@@ -9,7 +9,15 @@
     <script type="text/javascript" src="../node_modules/rangy-browser/lib/rangy-cssclassapplier.js"></script>
     <script type="text/javascript" src="../node_modules/rangy-browser/lib/rangy-selectionsaverestore.js"></script>
     <script type="text/javascript" src="../node_modules/rangy-browser/lib/rangy-serializer.js"></script>
+    <script type="text/javascript" src="../node_modules/rangy-browser/lib/rangy-serializer.js"></script>
+    <script type="text/javascript" src="../node_modules/mustache/mustache.js"></script>
+    <script type="text/javascript" src="../node_modules/blanket/dist/qunit/blanket.js"></script>
     <script src="../node_modules/qunitjs/qunit/qunit.js"></script>
+    <script>
+    if (location.href.match(/(\?|&)gruntReport($|&|=)/)) {
+        blanket.options("reporter", "../grunt-reporter.js");
+    }
+</script>
     <script type="text/javascript" src="js/loader.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
 </head>
@@ -18,6 +26,9 @@
 <div id="qunit-fixture">
     <div class="editor">
         Some example tekst
+    </div>
+    <div class="editor2">
+        Other editor
     </div>
 </div>
 </body>

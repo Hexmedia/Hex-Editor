@@ -12,14 +12,12 @@ $.fn.hexEditorToolbar = function ( action, options ) {
 				position: "top" //possible values top(top|glued)
 			}, options );
 
-			if ($( this ).hexEditorData( "toolbar" )) {
-				return $( this ).hexEditorData( "toolbar" );
+			if ($( this ).hexEditorData( "editor" )) {
+				return $( this ).hexEditorData( "editor" );
 			} else {
-				var toolbar = $w.hexEditorToolbar.init( this, settings );
+				var editor = $w.hexEditor.init( this, settings );
 
-				$( this ).hexEditorData( "toolbar", toolbar );
-
-				return toolbar;
+				return editor;
 			}
 			break;
 		case "destroy":

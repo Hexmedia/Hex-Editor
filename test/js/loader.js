@@ -3,6 +3,13 @@ $d = document;
 $r = window.rangy;
 $ = jQuery;
 
+$w.hexEditor = {};
+$w.hexEditor.plugins = {};
+$w.hexEditor.plugins.PluginType = {};
+
+$p = $w.hexEditor.plugins;
+$pt = $w.hexEditor.plugins.PluginType;
+
 $( $d ).ready( function () {
 	$w.loadHexEditor = function ( theme ) {
 		var src, plugins, ls;

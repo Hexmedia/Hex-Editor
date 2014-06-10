@@ -7,6 +7,8 @@ $.fn.hexEditor = function ( action, options ) {
 	}
 
 	switch (action) {
+		case "is":
+			return $( this ).hexEditorData( "editor" ) !== undefined;
 		case "init":
 			var settings = $.extend( {
 				toolbar: {
@@ -14,19 +16,11 @@ $.fn.hexEditor = function ( action, options ) {
 				}
 			}, options );
 
-			if ($( this ).hexEditorData( "editor" )) {
-				return $( this ).hexEditorData( "editor" );
-			} else {
-				var editor = $w.hexEditor.init( this, settings );
+			var editor = $w.hexEditor.init( this, settings );
 
-				$( this ).hexEditorData( "editor", editor );
-
-				return editor;
-			}
-			break;
+			return editor;
 		case "destroy":
-			$( this ).hexEditorRemoveData( "editor" );
-//				$( this ).data( "hex-editor" ).destroy();
-			break;
+			$w.hexEditor.destroy( this );
+			return true;
 	}
 };

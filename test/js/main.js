@@ -6,32 +6,41 @@
 
 		module( "Data test" );
 
-		test('hexEditorName', function() {
-			equal("test".hexEditorName().toString(), "hexEditorTest");
-		});
+		test( 'hexEditorName', function () {
+			equal( "test".hexEditorName().toString(), "hexEditorTest" );
+		} );
 
-		test('can add and remove', function() {
+		test( 'can add and remove', function () {
 			var name = 'test', val = '12345';
 
-			editor = $('.editor');
+			editor = $( '.editor' );
 
-			editor.hexEditorData(name, val);
+			editor.hexEditorData( name, val );
 
-			equal(editor.hexEditorData(name), val);
+			equal( editor.hexEditorData( name ), val );
 
-			editor.hexEditorRemoveData(name);
+			editor.hexEditorRemoveData( name );
 
-			equal(editor.hexEditorData(name), undefined);
-		});
+			equal( editor.hexEditorData( name ), undefined );
+		} );
 
 		module( "Main test" );
 
-		test( "is destroyed", function () {
+		test( "Initializing and Destroying", function () {
+			var editor, fixture, beforeHtml;
+
+			fixture = $( '#qunit-fixture' );
+
+			beforeHtml = $( fixture ).html();
+
 			editor = $( '.editor' );
 			editor.hexEditor();
-			editor.hexEditor( 'destroy' );
 
-			equal( editor.hexEditor( 'destroy' ), undefined );
+			equal( editor.hexEditor( 'is' ), true );
+			editor.hexEditor( 'destroy' );
+			equal( editor.hexEditor( 'is' ), false );
+
+			equal( $( fixture ).html(), beforeHtml );
 
 			//@todo check if there is a toolbar
 		} );
@@ -44,5 +53,23 @@
 
 			editor.hexEditor( 'destroy' );
 		} );
+
+		test( "can use more than one instance", function () {
+			var editor, editor2;
+
+			editor = $( ".editor" );
+			editor2 = $( ".editor2" );
+
+			editor.hexEditor();
+			editor2.hexEditor();
+
+			equal( editor.attr( 'contenteditable' ), "true", "ContentEditable added" );
+			equal( editor2.attr( 'contenteditable' ), "true", "ContentEditable added" );
+
+			editor.hexEditor( 'destroy' );
+			editor2.hexEditor( 'destroy' );
+		} );
+
+		module( "Toolbar tests" );
 	};
 })( jQuery, window, document, window.rangy );

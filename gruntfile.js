@@ -28,32 +28,47 @@ module.exports = function ( grunt ) {
 			clean: {
 				tests: ['build/log', 'build/*', 'dist']
 			},
+			htmlConvert: {
+				options: {
+					// custom options, see below
+				},
+				main: {
+					src: ['themes/' + theme + '/templates/*.tpl.html'],
+					dest: 'build/templates/js/templates.js'
+				},
+				plugins: {
+					src: ['plugins/*/templates/**/*.tpl.html'],
+					dest: 'build/templates/js/plugins.js'
+				}
+			},
 			concat: {
 				options: {
 					separator: '',
-					banner: '/*! (C) HexMedia <%= pkg.name %> - v<%= pkg.version %> - ' +
-						'<%= grunt.template.today("yyyy-mm-dd") %> */ \n' +
-						'(function($, $w, $d, $r) {\n' +
-						'\t"use strict";\n\n',
-					footer: '\n})(jQuery, window, document, window.rangy);',
-					stripBanners: true,
-					process: function ( src ) {
-						var txt, splited;
-
-						splited = src.split( '\n' );
-						txt = '';
-
-						for (var line in splited) {
-							if (typeof splited[line] != 'undefined') {
-								txt += '\t' + splited[line] + '\n';
-							}
-						}
-
-						return txt;
-					}
+					stripBanners: true
 				},
 				js: {
-					src: ['src/*.js', 'plugins/*.js', "themes/" + theme + "/*.js"],
+					options: {
+						banner: '/*! (C) HexMedia <%= pkg.name %> - v<%= pkg.version %> - ' +
+							'<%= grunt.template.today("yyyy-mm-dd") %> */ \n' +
+							'(function($, $w, $d, $r, $p, $pt) {\n' +
+							'\t"use strict";\n\n',
+						footer: '\n})(jQuery, window, document, window.rangy, window.hexEditor.plugins, window.hexEditor.plugins.PluginType);',
+						process: function ( src ) {
+							var txt, splited;
+
+							splited = src.split( '\n' );
+							txt = '';
+
+							for (var line in splited) {
+								if (typeof splited[line] != 'undefined') {
+									txt += '\t' + splited[line] + '\n';
+								}
+							}
+
+							return txt;
+						}
+					},
+					src: ['build/templates/js/*.js', 'src/*.js', 'plugins/*.js', "themes/" + theme + "/*.js"],
 					dest: 'dist/jquery.<%= pkg.name %>.js'
 				},
 				css: {
@@ -63,7 +78,7 @@ module.exports = function ( grunt ) {
 			},
 			uglify: {
 				options: {
-					banner: '/*! Hexmedia <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+					banner: '/*! Hexmedia <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("dd-mm-yyyy") %> */\n'
 				},
 				dist: {
 					files: {
@@ -73,6 +88,14 @@ module.exports = function ( grunt ) {
 			},
 			qunit: {
 				files: ['test/**/*.html']
+			},
+			blanket_qunit: {
+				all: {
+					options: {
+						urls: ['test/main.html?coverage=true&gruntReport'],
+						threshold: 70
+					}
+				}
 			},
 			jshint: {
 				files: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js', "themes/**/*.js", "plugins/**/*.js"],
@@ -94,21 +117,6 @@ module.exports = function ( grunt ) {
 					},
 					files: {
 						src: [ "src", "plugins", "themes/" + theme ]
-					}
-				}
-			},
-			twig: {
-				build_target: {
-					files: {
-						'build/templates/js/button.js': [
-							'themes/' + theme + '/templates/button.twig',
-						],
-						'build/templates/js/logo.js': [
-							'themes/' + theme + '/templates/logo.twig',
-						],
-						'build/templates/js/toolbar.js': [
-							'themes/' + theme + '/templates/toolbar.twig',
-						]
 					}
 				}
 			},
@@ -143,7 +151,8 @@ module.exports = function ( grunt ) {
 				tasks: ['jshint', 'qunit']
 			}
 		}
-	);
+	)
+	;
 
 	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
 	grunt.loadNpmTasks( 'grunt-contrib-jshint' );
@@ -154,17 +163,18 @@ module.exports = function ( grunt ) {
 	grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
 	grunt.loadNpmTasks( 'grunt-contrib-jscs' );
 	grunt.loadNpmTasks( 'grunt-contrib-clean' );
-	grunt.loadNpmTasks( 'grunt-twig' );
+	grunt.loadNpmTasks( 'grunt-blanket-qunit' );
 	grunt.loadNpmTasks( 'grunt-contrib-copy' );
+	grunt.loadNpmTasks( 'grunt-html-convert' );
 
 	grunt.registerTask( 'lint', ['jshint', 'jscs'] );
 
-	grunt.registerTask( 'test', ['lint', 'qunit'] );
+	grunt.registerTask( 'test', ['lint', 'blanket_qunit'] );
 
-	grunt.registerTask( 'templates', ['twig'] );
+	grunt.registerTask( 'templates', [] );
 
-	grunt.registerTask( 'make:js', [ 'twig', 'less', 'concat', 'cssmin', 'uglify', 'copy'] );
-//	grunt.registerTask( 'make:css', [ 'twig', 'less', 'concat', 'cssmin', 'uglify', 'copy'] );
+	grunt.registerTask( 'make:js', [ 'htmlConvert', 'less', 'concat', 'cssmin', 'uglify', 'copy'] );
+//	grunt.registerTask( 'make:css', [ 'less', 'concat', 'cssmin', 'uglify', 'copy'] );
 
 	grunt.registerTask( 'make', ['make:js'] );//, 'make:css'] );
 

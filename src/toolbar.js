@@ -1,20 +1,18 @@
 $w.hexEditorToolbar = {
-	element: null,
-	options: {},
-	init: function ( element, options ) {
-		this.element = element;
-		this.options = options;
+	isInitialized: false,
+	plugins: [ "b", "i", "u" ],
+	init: function () {
+		this.isInitialized = true;
 
-		//If position is top we need to add class
-		if (options.position == "top") {
+		var plugins = this.initPlugins();
 
-		}
+		$( "body" ).prepend(
 
-		return this;
+		);
 	},
 	destroy: function () {
-		if (this.options.position == "top") {
+	},
+	initPlugins: function () {
 
-		}
 	}
 };
