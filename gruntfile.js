@@ -134,6 +134,9 @@ module.exports = function ( grunt ) {
 					dest: "build/themes/" + theme + ".css"
 				}
 			},
+			lesslint: {
+				src: ['themes/**/*.less']
+			},
 			cssmin: {
 				minify: {
 					expand: true,
@@ -173,12 +176,13 @@ module.exports = function ( grunt ) {
 	grunt.loadNpmTasks( 'grunt-html-convert' );
 	grunt.loadNpmTasks( 'grunt-qunit-junit' );
 	grunt.loadNpmTasks( 'grunt-qunit-istanbul' );
+	grunt.loadNpmTasks( 'grunt-lesslint' );
 
 	grunt.registerTask( 'lint', ['jshint', 'jscs'] );
 
 	grunt.registerTask( 'unit', ['qunit', 'qunit_junit' ] );
 
-	grunt.registerTask( 'test', ['lint', 'unit'] );
+	grunt.registerTask( 'test', ['lint', 'lesslint', 'unit' ] );
 
 	grunt.registerTask( 'build:js', [ 'htmlConvert', 'concat:js', 'uglify'] );
 	grunt.registerTask( 'build:css', [ 'less', 'concat:css', 'cssmin'] );
@@ -187,4 +191,4 @@ module.exports = function ( grunt ) {
 	grunt.registerTask( 'build', ['build:js', 'build:css', 'build:img'] );
 
 	grunt.registerTask( 'default', ['clean', 'test', 'build'] );
-}
+};
