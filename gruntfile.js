@@ -120,7 +120,7 @@ module.exports = function ( grunt ) {
 			jscs: {
 				all: {
 					options: {
-						"standard": "Jquery",
+//						"standard": "jquery",
 						"report": "xml"
 					},
 					files: {
