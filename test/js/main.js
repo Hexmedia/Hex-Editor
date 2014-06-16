@@ -37,15 +37,18 @@
 			editor.hexEditor();
 
 			equal( editor.hexEditor( 'is' ), true );
+			equal( editor.attr( 'contenteditable' ), "true", "ContentEditable added" );
 			editor.hexEditor( 'destroy' );
 			equal( editor.hexEditor( 'is' ), false );
 
 			equal( $( fixture ).html(), beforeHtml );
 
+			equal( editor.attr( 'contenteditable' ), undefined, "ContentEditable remved" );
+
 			//@todo check if there is a toolbar
 		} );
 
-		test( "is content editable", function () {
+		test( "Is content editable", function () {
 			editor = $( '.editor' );
 			editor.hexEditor();
 
@@ -54,8 +57,8 @@
 			editor.hexEditor( 'destroy' );
 		} );
 
-		test( "can use more than one instance", function () {
-			var editor, editor2;
+		test( "Can use more than one instance", function () {
+			var editor2;
 
 			editor = $( ".editor" );
 			editor2 = $( ".editor2" );
@@ -69,6 +72,18 @@
 			editor.hexEditor( 'destroy' );
 			editor2.hexEditor( 'destroy' );
 		} );
+
+		test( "Reinitializing instance", function () {
+			editor = $( ".editor" );
+
+			editor.hexEditor( {} );//test for options...
+			equal( editor.attr( 'contenteditable' ), "true", "ContentEditable added" );
+			editor.hexEditor();
+
+			editor.hexEditor( 'destroy' );
+		} );
+
+		//@todo write test for elements..
 
 		module( "Toolbar tests" );
 	};

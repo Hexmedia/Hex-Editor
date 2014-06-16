@@ -32,7 +32,7 @@ module.exports = function ( grunt ) {
 				options: {
 					// custom options, see below
 				},
-				main: {
+				src: {
 					src: ['themes/' + theme + '/templates/*.tpl.html'],
 					dest: 'build/templates/js/templates.js'
 				},
@@ -72,13 +72,13 @@ module.exports = function ( grunt ) {
 					dest: 'dist/jquery.<%= pkg.name %>.js'
 				},
 				css: {
-					src: ['build/themes/theme.css'],
+					src: ['build/themes/' + theme + '.css'],
 					dest: 'dist/<%= pkg.name %>.css'
 				}
 			},
 			uglify: {
 				options: {
-					banner: '/*! Hexmedia <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+					banner: '/*! Hexmedia <%= pkg.name %> (C) Krystian Kuczek <krystian@hexmedia.pl> - v<%= pkg.version %> - <%= grunt.template.today("dd-mm-yyyy") %> */\n'
 				},
 				dist: {
 					files: {
@@ -87,18 +87,26 @@ module.exports = function ( grunt ) {
 				}
 			},
 			qunit: {
+				options: {
+					'--web-security': 'no',
+					coverage: {
+						disposeCollector: true,
+						src: ['src/**/*.js', 'src/*.js', 'plugins/**/*.js'],
+						instrumentedFiles: 'temp/',
+						htmlReport: 'build/report/coverage',
+						coberturaReport: 'build/report/',
+						linesThresholdPct: 50
+					}
+				},
 				files: ['test/**/*.html']
 			},
-			blanket_qunit: {
-				all: {
-					options: {
-						urls: ['test/main.html?coverage=true&gruntReport'],
-						threshold: 70
-					}
+			qunit_junit: {
+				options: {
+					dest: 'build/log/junit.xml'
 				}
 			},
 			jshint: {
-				files: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js', "themes/**/*.js", "plugins/**/*.js"],
+				files: ['gruntfile.js', 'src/**/*.js', 'test/**/*.js', "themes/**/*.js", "plugins/**/*.js"],
 				options: {
 					// options here to override JSHint defaults
 					globals: {
@@ -123,7 +131,7 @@ module.exports = function ( grunt ) {
 			less: {
 				files: {
 					src: ["themes/" + theme + "/" + theme + ".less"],
-					dest: "build/themes/theme.css"
+					dest: "build/themes/" + theme + ".css"
 				}
 			},
 			cssmin: {
@@ -151,32 +159,31 @@ module.exports = function ( grunt ) {
 				tasks: ['jshint', 'qunit']
 			}
 		}
-	)
-	;
+	);
 
 	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
 	grunt.loadNpmTasks( 'grunt-contrib-jshint' );
-	grunt.loadNpmTasks( 'grunt-contrib-qunit' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
 	grunt.loadNpmTasks( 'grunt-contrib-concat' );
 	grunt.loadNpmTasks( 'grunt-contrib-less' );
 	grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
 	grunt.loadNpmTasks( 'grunt-contrib-jscs' );
 	grunt.loadNpmTasks( 'grunt-contrib-clean' );
-	grunt.loadNpmTasks( 'grunt-blanket-qunit' );
 	grunt.loadNpmTasks( 'grunt-contrib-copy' );
 	grunt.loadNpmTasks( 'grunt-html-convert' );
+	grunt.loadNpmTasks( 'grunt-qunit-junit' );
+	grunt.loadNpmTasks( 'grunt-qunit-istanbul' );
 
 	grunt.registerTask( 'lint', ['jshint', 'jscs'] );
 
-	grunt.registerTask( 'test', ['lint', 'blanket_qunit'] );
+	grunt.registerTask( 'unit', ['qunit', 'qunit_junit' ] );
 
-	grunt.registerTask( 'templates', [] );
+	grunt.registerTask( 'test', ['lint', 'unit'] );
 
-	grunt.registerTask( 'make:js', [ 'htmlConvert', 'less', 'concat', 'cssmin', 'uglify', 'copy'] );
-//	grunt.registerTask( 'make:css', [ 'less', 'concat', 'cssmin', 'uglify', 'copy'] );
+	grunt.registerTask( 'make:js', [ 'htmlConvert', 'concat:js', 'uglify'] );
+	grunt.registerTask( 'make:css', [ 'less', 'concat:css', 'cssmin'] );
 
-	grunt.registerTask( 'make', ['make:js'] );//, 'make:css'] );
+	grunt.registerTask( 'make', ['make:js', 'make:css', 'copy'] );
 
 	grunt.registerTask( 'default', ['clean', 'test', 'make'] );
 
