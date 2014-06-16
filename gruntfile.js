@@ -180,12 +180,11 @@ module.exports = function ( grunt ) {
 
 	grunt.registerTask( 'test', ['lint', 'unit'] );
 
-	grunt.registerTask( 'make:js', [ 'htmlConvert', 'concat:js', 'uglify'] );
-	grunt.registerTask( 'make:css', [ 'less', 'concat:css', 'cssmin'] );
+	grunt.registerTask( 'build:js', [ 'htmlConvert', 'concat:js', 'uglify'] );
+	grunt.registerTask( 'build:css', [ 'less', 'concat:css', 'cssmin'] );
+	grunt.registerTask( 'build:img', [ 'copy' ] );
 
-	grunt.registerTask( 'make', ['make:js', 'make:css', 'copy'] );
+	grunt.registerTask( 'build', ['build:js', 'build:css', 'build:img'] );
 
-	grunt.registerTask( 'default', ['clean', 'test', 'make'] );
-
+	grunt.registerTask( 'default', ['clean', 'test', 'build'] );
 }
-;

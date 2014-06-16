@@ -29,7 +29,8 @@
     "grunt-htmlhint": "~0.4.0"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+	"build": "grunt"
   },
   "repository": {
     "type": "git",
